@@ -58,6 +58,11 @@ ROOT_URLCONF = 'tvnotifyserver.urls'
 WSGI_APPLICATION = 'tvnotifyserver.wsgi.application'
 
 
+# OAuth
+
+GOOGLE_SECRET = os.environ.get('AUTH_GOOGLE_SECRET')
+
+
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
