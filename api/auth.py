@@ -5,9 +5,7 @@ import requests
 import jwt
 from django.conf import settings
 from rest_framework.decorators import api_view, parser_classes
-
 from rest_framework.response import Response
-
 from rest_framework.parsers import JSONParser
 
 from api.models import User
@@ -34,9 +32,7 @@ def google(request):
     serializer.is_valid(raise_exception=True)
 
     access_token_url = 'https://accounts.google.com/o/oauth2/token'
-    people_api_url = (
-        'https://www.googleapis.com/plus/v1/people/me'
-    )
+    userinfo_url = 'https://www.googleapis.com/oauth2/v2/userinfo'
     payload = {
         'client_id': serializer.validated_data['clientId'],
         'redirect_uri': serializer.validated_data['redirectUri'],
@@ -55,15 +51,15 @@ def google(request):
         return Response(token)
 
     # Step 2. Retrieve information about the current user.
-    r = requests.get(people_api_url, headers=headers)
+    r = requests.get(userinfo_url, headers=headers)
     profile = json.loads(r.text)
     user = User.objects(google=profile['id']).first()
     if user:
         token = create_token(user)
         return Response({'token': token})
 
-    u = User(google=profile['id'],
-             display_name=profile['displayName'])
+    u = User(email=profile['email'], google=profile['id'],
+             display_name=profile['name'])
     u.save()
     token = create_token(u)
     return Response({'token': token})
