@@ -6,10 +6,12 @@ import jwt
 from django.conf import settings
 from rest_framework.decorators import api_view, parser_classes
 from rest_framework.response import Response
+
 from rest_framework.parsers import JSONParser
 
 from api.models import User
 from api.serializers import GoogleAuthSerializer
+from api.errors import AuthenticationError
 
 
 def create_token(user):
@@ -47,8 +49,7 @@ def google(request):
     try:
         headers = {'Authorization': 'Bearer {0}'.format(token['access_token'])}
     except KeyError:
-        # TODO(poxip): Implement errors
-        return Response(token)
+        raise AuthenticationError(token['error'])
 
     # Step 2. Retrieve information about the current user.
     r = requests.get(userinfo_url, headers=headers)
