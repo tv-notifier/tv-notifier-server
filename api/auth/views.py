@@ -5,13 +5,13 @@ import json
 import requests
 from django.conf import settings
 from rest_framework.decorators import api_view, parser_classes
-from rest_framework.response import Response
 from rest_framework.parsers import JSONParser
+from rest_framework.response import Response
 
 from api.models import User
-from api.serializers import GoogleAuthSerializer
-from api.auth.common import create_token
-from api.errors import AuthenticationError
+from .common import create_token
+from .errors import AuthenticationError
+from .serializers import GoogleAuthSerializer
 
 
 @api_view(('POST',))

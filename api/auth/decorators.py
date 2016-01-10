@@ -3,9 +3,10 @@
 from functools import wraps
 from jwt import DecodeError, ExpiredSignature
 
+from api.errors import InvalidRequestData
 from api.models import User
-from api.auth.common import parse_token
-from api.errors import AuthorizationError, InvalidRequestData
+from .common import parse_token
+from .errors import AuthorizationError
 
 
 def login_required(f):
