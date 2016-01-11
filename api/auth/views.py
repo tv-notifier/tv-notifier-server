@@ -24,8 +24,8 @@ def google(request):
     access_token_url = 'https://accounts.google.com/o/oauth2/token'
     userinfo_url = 'https://www.googleapis.com/oauth2/v2/userinfo'
     payload = {
-        'client_id': serializer.validated_data['clientId'],
-        'redirect_uri': serializer.validated_data['redirectUri'],
+        'client_id': serializer.validated_data['client_id'],
+        'redirect_uri': serializer.validated_data['redirect_uri'],
         'client_secret': settings.GOOGLE_SECRET,
         'code': serializer.validated_data['code'],
         'grant_type': 'authorization_code'
