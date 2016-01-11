@@ -19,21 +19,11 @@ def get_show(show_id):
     except DoesNotExist:
         try:
             show = Show.from_api(int(show_id))
+            show.save()
         except KeyError:
             raise InvalidShowId()
 
     return show
-
-@login_required
-@api_view(('PUT',))
-def follow(request, user, show_id):
-    """API view for following TV Shows by users"""
-    show = get_show(show_id)
-    user.follow_show(show)
-    return Response({
-        'show': show.to_dict_short(),
-        'followed': show in user.shows
-    })
 
 
 @login_required
@@ -46,5 +36,17 @@ def info(request, user, show_id):
     show = get_show(show_id)
     return Response({
         'show': show.to_mongo(),
-        'followed': show in user.shows
+        'followed': user.is_following(show)
+    })
+
+
+@login_required
+@api_view(('PUT',))
+def follow(request, user, show_id):
+    """API view for following TV Shows by users"""
+    show = get_show(show_id)
+    user.follow_show(show)
+    return Response({
+        'show': show.to_dict_short(),
+        'followed': user.is_following(show)
     })

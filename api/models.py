@@ -88,9 +88,13 @@ class User(Document):
     google = StringField(max_length=120, unique=True)
     shows = ListField(ReferenceField(Show))
 
+    def is_following(self, show):
+        self.reload()
+        return show in self.shows
+
     def follow_show(self, show):
         """Follow a Show
 
-        :param show Show - The TV show to follow
+        :param show Show - The TV show to follow.
         """
-        self.shows.append(show)
+        self.update(add_to_set__shows=[show])
