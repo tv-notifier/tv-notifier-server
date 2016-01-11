@@ -50,3 +50,15 @@ def follow(request, user, show_id):
         'show': show.to_dict_short(),
         'followed': user.is_following(show)
     })
+
+
+@login_required
+@api_view(('PUT',))
+def unfollow(request, user, show_id):
+    """API view for unfollowing TV Shows by users"""
+    show = get_show(show_id)
+    user.unfollow_show(show)
+    return Response({
+        'show': show.to_dict_short(),
+        'followed': user.is_following(show)
+    })

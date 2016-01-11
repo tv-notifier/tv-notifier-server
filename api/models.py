@@ -129,3 +129,10 @@ class User(Document):
         :param show Show - The TV show to follow.
         """
         self.update(add_to_set__shows=[show])
+
+    def unfollow_show(self, show):
+        """Unfollow a Show
+
+        :param show Show - The TV show to unfollow.
+        """
+        self.update(pull__shows=show)
