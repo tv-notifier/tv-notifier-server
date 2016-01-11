@@ -15,7 +15,7 @@ def parse_date(date):
 
 
 class Episode(EmbeddedDocument):
-    id = IntField(unique=True)
+    id = IntField()
     name = StringField(required=True, max_length=250)
     air_date = DateTimeField()
 
@@ -32,7 +32,7 @@ class Episode(EmbeddedDocument):
 
 
 class Season(EmbeddedDocument):
-    id = IntField(unique=True, required=True)
+    id = IntField(required=True)
     episodes = EmbeddedDocumentListField(Episode)
 
     @classmethod
