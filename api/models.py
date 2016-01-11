@@ -27,8 +27,20 @@ class Episode(EmbeddedDocument):
             an Episode object from.
         """
         # The id (order in the season) has to be added manually
-        return cls(name=episode['episodename'],
+        return cls(id=episode['episodenumber'],
+                   name=episode['episodename'],
                    air_date=parse_date(episode['firstaired']))
+
+    def to_dict(self):
+        """Get a dictionary of an Episode object.
+
+        :return dict
+        """
+        return {
+            'id': self.id,
+            'name': self.name,
+            'air_date': self.air_date
+        }
 
 
 class Season(EmbeddedDocument):
@@ -46,6 +58,15 @@ class Season(EmbeddedDocument):
         return cls(id=season_id, episodes=[
             Episode.from_api_object(e) for e in season.values()
         ])
+
+    def to_dict(self):
+        """Get a dictionary of a Season object.
+
+        :return dict
+        """
+        return {
+            'episodes': [e.to_dict() for e in self.episodes]
+        }
 
 
 class Show(Document):
@@ -68,17 +89,27 @@ class Show(Document):
 
         return show
 
-    def to_dict_short(self):
-        """Custom method to return only selected elements of a Show object.
+    def to_dict(self):
+        """Get a dictionary of a Show object.
 
-        Use Show.to_mongo() to get the whole Show's info
+        :return dict
+        """
+        return {
+            'id': self.tvdb_id,
+            'name': self.name,
+            'year': self.year,
+            'seasons': [s.to_dict() for s in self.seasons]
+        }
+
+    def to_dict_short(self):
+        """Return only selected elements of a Show object.
 
         :return dict
         """
         return {
             'tvdb_id': self.tvdb_id,
             'name': self.name,
-            'year': self.year,
+            'year': self.year
         }
 
 

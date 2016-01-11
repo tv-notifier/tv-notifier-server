@@ -35,7 +35,7 @@ def info(request, user, show_id):
     """
     show = get_show(show_id)
     return Response({
-        'show': show.to_mongo(),
+        'show': show.to_dict(),
         'followed': user.is_following(show)
     })
 
